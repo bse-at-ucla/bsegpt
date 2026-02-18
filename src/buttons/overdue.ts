@@ -7,8 +7,6 @@ module.exports = {
 	},
 
 	async execute(interaction: ButtonInteraction) {
-		await interaction.deferUpdate();
-
 		if (!interaction.message.embeds[0]) {
 			await interaction.followUp({ content: 'Unable to update status. Please try again later.', ephemeral: true });
 		};
@@ -42,6 +40,8 @@ module.exports = {
 
 		const rowBuilder = new ActionRowBuilder<ButtonBuilder>()
 			.addComponents([stuckButton, doneButton]);
+
+		interaction.client.channels.fetch('1473662141985722451').then(channel => { channel?.isSendable() && channel.send({ content: `<@&1473662141985722451>: <@${interaction.user.id}> is overdue on an action item. See the message here: ${interaction.message.url}` }) });
 
 		await interaction.update({
 			embeds: [newEmbed],

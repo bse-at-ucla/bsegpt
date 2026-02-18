@@ -7,8 +7,6 @@ module.exports = {
 	},
 
 	async execute(interaction: ButtonInteraction) {
-		await interaction.deferUpdate();
-
 		if (!interaction.message.embeds[0]) {
 			await interaction.followUp({ content: 'Unable to update status. Please try again later.', ephemeral: true });
 		};

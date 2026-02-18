@@ -15,8 +15,6 @@ module.exports = {
 			await interaction.followUp({ content: 'Only the assignee or an admin can update the status of this action item.', ephemeral: true });
 		}
 
-		// await interaction.deferUpdate();
-
 		const embed = interaction.message.embeds[0];
 
 		const newEmbed = new EmbedBuilder()
@@ -48,6 +46,8 @@ module.exports = {
 
 		const rowBuilder = new ActionRowBuilder<ButtonBuilder>()
 			.addComponents([unstuckButton, overdueButton, doneButton]);
+
+		interaction.client.channels.fetch('1473662141985722451').then(channel => { channel?.isSendable() && channel.send({ content: `<@&1473662141985722451>: <@${interaction.user.id}> is stuck on an action item. See the message here: ${interaction.message.url}` }) });
 
 		await interaction.update({
 			embeds: [newEmbed],
