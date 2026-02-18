@@ -15,7 +15,7 @@ module.exports = {
 			await interaction.followUp({ content: 'Only the assignee or an admin can update the status of this action item.', ephemeral: true });
 		}
 
-		await interaction.deferUpdate();
+		// await interaction.deferUpdate();
 
 		const embed = interaction.message.embeds[0];
 
