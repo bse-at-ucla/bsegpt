@@ -109,7 +109,7 @@ app.listen(3000, async () => {
 			console.log("Bot online");
 			client.user?.setPresence({
 				activities: [
-					{ name: '/help', type: ActivityType.Listening }
+					{ name: '/create', type: ActivityType.Listening }
 				],
 				status: PresenceUpdateStatus.Online,
 			});
