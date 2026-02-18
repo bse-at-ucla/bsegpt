@@ -47,7 +47,7 @@ module.exports = {
 		const rowBuilder = new ActionRowBuilder<ButtonBuilder>()
 			.addComponents([unstuckButton, overdueButton, doneButton]);
 
-		interaction.client.channels.fetch('1473662141985722451').then(channel => { channel?.isSendable() && channel.send({ content: `<@&1473662141985722451>: <@${interaction.user.id}> is stuck on an action item. See the message here: ${interaction.message.url}` }) });
+		interaction.client.channels.fetch('1473662141985722451').then(channel => { channel?.isSendable() && channel.send({ content: `<@&1473577049322164294>: <@${interaction.user.id}> is stuck on an action item. See the message here: ${interaction.message.url}` }) });
 
 		await interaction.update({
 			embeds: [newEmbed],
