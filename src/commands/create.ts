@@ -31,7 +31,7 @@ module.exports = {
 		const embed = new EmbedBuilder()
 			.setTitle('Action Item - In Progress')
 			.setColor(HexCodes.Blue)
-			.setAuthor({ name: user!.tag, iconURL: user!.displayAvatarURL() })
+			.setAuthor({ name: user!.displayName, iconURL: user!.displayAvatarURL() })
 			.setDescription(interaction.options.getString('description') || 'N/A')
 			.setTimestamp()
 			.setFooter({ text: "Select a button below to update status" })

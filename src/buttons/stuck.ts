@@ -7,17 +7,15 @@ module.exports = {
 	},
 
 	async execute(interaction: ButtonInteraction) {
-		await interaction.deferUpdate();
-
 		if (!interaction.message.embeds[0]) {
 			await interaction.followUp({ content: 'Unable to update status. Please try again later.', ephemeral: true });
 		};
 
-		// const roles = await interaction.guild?.roles.fetch();
-		// const isAdmin = roles?.get('1473577049322164294')?.members.has(interaction.user.id);
 		if ((interaction.user.id !== interaction.message.author.id) && (!(await interaction.guild?.roles.fetch())?.get('1473577049322164294')?.members.has(interaction.user.id))) {
 			await interaction.followUp({ content: 'Only the assignee or an admin can update the status of this action item.', ephemeral: true });
 		}
+
+		await interaction.deferUpdate();
 
 		const embed = interaction.message.embeds[0];
 
