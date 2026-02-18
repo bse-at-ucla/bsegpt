@@ -1,0 +1,38 @@
+{
+	"name": "bsegpt",
+	"version": "0.0.1",
+	"description": "",
+	"main": "dist/index.js",
+	"scripts": {
+		"build": "tsc -p tsconfig.json --skipLibCheck",
+		"dev": "npm run build && npm run start",
+		"dev-r": "npm run build && npm run register && npm run start",
+		"host": "pm2 kill && pm2 start --node-args=\"-r dotenv/config\" ./dist/index.js --name \"bseGPT\" -f",
+		"register": "node -r dotenv/config ./dist/deploy-commands.js",
+		"render": "npm i && npm run build && npm run register",
+		"start": "node -r dotenv/config ./dist/index.js",
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"watch": "tsc --watch"
+	},
+	"keywords": [],
+	"author": "RyloRiz",
+	"license": "ISC",
+	"dependencies": {
+		"bufferutil": "^4.0.8",
+		"discord.js": "^14.14.1",
+		"dotenv": "^16.3.1",
+		"express": "^4.18.2",
+		"node-fetch": "^3.3.2",
+		"pm2": "^5.3.0",
+		"utf-8-validate": "^6.0.3"
+	},
+	"files": [
+		"/dist"
+	],
+	"private": true,
+	"devDependencies": {
+		"typescript": "^5.3.3",
+		"@types/express": "^4.17.21",
+		"@types/node": "^20.10.5"
+	}
+}

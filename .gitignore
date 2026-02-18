@@ -1,0 +1,11 @@
+# Directories
+build
+dist
+node_modules
+
+# Files
+._*
+.DS_Store
+.env
+*.ps1
+tsconfig.tsbuildinfo
