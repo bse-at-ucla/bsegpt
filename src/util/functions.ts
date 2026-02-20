@@ -28,7 +28,7 @@ export function generateModal(isEditing: boolean, defaults: Array<string | undef
 	const deadlineInput = new TextInputBuilder()
 		.setCustomId('deadlineInput')
 		.setStyle(TextInputStyle.Short)
-		.setValue(isEditing && typeof defaults[1] === 'string' ? defaults[1] : 'Ex. 2/18');
+		.setValue(isEditing && typeof defaults[1] === 'string' ? defaults[1] : '');
 
 	const deadlineLabel = new LabelBuilder()
 		.setLabel("What is the deadline?")
