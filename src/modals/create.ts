@@ -12,8 +12,6 @@ module.exports = {
 
 		const split = interaction.customId.split('|').toSpliced(0, 1);
 
-		if (!interaction.isFromMessage()) return await interaction.reply({ content: 'Unable to fetch message.', ephemeral: true });
-
 		const embed = new EmbedBuilder()
 			.setTitle('Action Item - In Progress')
 			.setColor(HexCodes.Blue)
@@ -28,7 +26,7 @@ module.exports = {
 		const rowBuilder = new ActionRowBuilder<ButtonBuilder>()
 			.addComponents([editButton, stuckButton, overdueButton, doneButton]);
 
-		await interaction.update({
+		await interaction.reply({
 			embeds: [embed],
 			components: [rowBuilder],
 		});
