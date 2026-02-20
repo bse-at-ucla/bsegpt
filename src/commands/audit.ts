@@ -5,10 +5,6 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('audit')
 		.setDescription('Audit the actions items in this channel')
-		.addBooleanOption(option =>
-			option
-				.setName('ephemeral')
-				.setDescription('Whether or not to make the response private to you'))
 		.addStringOption(option =>
 			option
 				.setName('type')
@@ -36,7 +32,11 @@ module.exports = {
 					{ name: "250", value: 250 },
 					{ name: "500", value: 500 },
 					{ name: "1000", value: 1000 },
-				)),
+			))
+		.addBooleanOption(option =>
+			option
+				.setName('ephemeral')
+				.setDescription('Whether or not to make the response private to you')),
 
 	async execute(interaction: ChatInputCommandInteraction) {
 		const ephemeral = interaction.options.get('ephemeral')?.value as boolean || false;
