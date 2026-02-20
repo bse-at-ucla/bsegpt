@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
-import { HexCodes } from 'src/util';
+import { HexCodes } from '../util';
 
 module.exports = {
 	data: new SlashCommandBuilder()

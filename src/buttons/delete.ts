@@ -1,5 +1,5 @@
 import { type ButtonInteraction } from 'discord.js';
-import { authenticate } from 'src/util';
+import { authenticate } from '../util';
 
 module.exports = {
 	data: {
