@@ -44,9 +44,11 @@ module.exports = {
 		const limit = interaction.options.get('limit')?.value as number || 50;
 
 		const channel = await interaction.channel?.fetch();
-		const messages = await channel?.messages.fetch({ limit: limit });
+		let messages = await channel?.messages.fetch({ limit: limit });
 
 		if (!messages) return await interaction.reply({ content: 'Unable to fetch messages.', ephemeral: true });
+
+		messages = messages.filter(message => message.embeds.length > 0 && message.embeds[0].title?.startsWith("Action Item"));
 
 		await interaction.deferReply({ ephemeral });
 
@@ -75,6 +77,7 @@ module.exports = {
 						inline: true,
 					};
 				});
+				if (fields.length > 25) fields.splice(25);
 				const embed = new EmbedBuilder()
 					.setTitle(`Action Items for <@${assignee}>`)
 					.setColor(HexCodes.Blue)
@@ -84,6 +87,8 @@ module.exports = {
 
 				embeds.push(embed);
 			}
+
+			if (embeds.length > 10) embeds.splice(10);
 
 			await interaction.editReply({ embeds });
 		} else if (type === 'status') {
@@ -109,6 +114,7 @@ module.exports = {
 						inline: true,
 					};
 				});
+				if (fields.length > 25) fields.splice(25);
 				const embed = new EmbedBuilder()
 					.setTitle(`${status} Action Items`)
 					.setColor(HexCodes.Blue)
@@ -118,6 +124,8 @@ module.exports = {
 
 				embeds.push(embed);
 			}
+
+			if (embeds.length > 10) embeds.splice(10);
 
 			await interaction.editReply({ embeds });
 		}
