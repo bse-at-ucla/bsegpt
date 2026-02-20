@@ -18,7 +18,7 @@ export function generateModal(isEditing: boolean, defaults: Array<string | undef
 	const descriptionInput = new TextInputBuilder()
 		.setCustomId('descriptionInput')
 		.setStyle(TextInputStyle.Paragraph)
-		.setPlaceholder(isEditing && typeof defaults[0] === 'string' ? defaults[0] : '');
+		.setValue(isEditing && typeof defaults[0] === 'string' ? defaults[0] : '');
 
 	const descriptionLabel = new LabelBuilder()
 		.setLabel("What is your action item?")
@@ -28,7 +28,7 @@ export function generateModal(isEditing: boolean, defaults: Array<string | undef
 	const deadlineInput = new TextInputBuilder()
 		.setCustomId('deadlineInput')
 		.setStyle(TextInputStyle.Short)
-		.setPlaceholder(isEditing && typeof defaults[1] === 'string' ? defaults[1] : 'Ex. 2/18');
+		.setValue(isEditing && typeof defaults[1] === 'string' ? defaults[1] : 'Ex. 2/18');
 
 	const deadlineLabel = new LabelBuilder()
 		.setLabel("What is the deadline?")
