@@ -1,5 +1,6 @@
-import { TextInputBuilder, TextInputStyle, LabelBuilder, ModalBuilder, ButtonInteraction } from 'discord.js';
+import { TextInputBuilder, TextInputStyle, LabelBuilder, ModalBuilder, ButtonInteraction, Colors } from 'discord.js';
 import type { ValueOf } from './types'
+import { HexCodes } from './enum';
 
 export function capitalCase(str: string) {
 	return str.trim().toLowerCase().split(' ').map((v, i) => v.split('').map((v1, i1) => i1 === 0 ? v1.toUpperCase() : v1).join('')).join(' ');
@@ -12,6 +13,14 @@ export function getEntryFromValue<T = any>(arr: T[], subName: keyof T, subValue:
 			return value;
 		}
 	}
+}
+
+export function convertHexColorToStatus(hex: number | null) {
+	if (hex === Colors.Blue) return 'In Progress';
+	if (hex === Colors.Yellow) return 'Stuck';
+	if (hex === Colors.Red) return 'Overdue';
+	if (hex === Colors.Green) return 'Done';
+	return 'N/A';
 }
 
 export function generateModal(isEditing: boolean, defaults: Array<string | undefined | null> = []) {

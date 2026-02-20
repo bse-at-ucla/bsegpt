@@ -19,8 +19,8 @@ module.exports = {
 			.setTimestamp()
 			.setFooter({ text: "Select a button below to update status" })
 			.addFields(
-				{ name: 'Deadline', value: deadline },
-				{ name: 'Assignee(s)', value: split.map(id => `<@${id}>`).join(', ') }
+				{ name: 'Deadline', value: deadline, inline: true },
+				{ name: 'Assignee(s)', value: split.map(id => `<@${id}>`).join(', '), inline: true }
 		);
 
 		const rowBuilder = new ActionRowBuilder<ButtonBuilder>()
