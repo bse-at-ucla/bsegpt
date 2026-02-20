@@ -79,7 +79,7 @@ module.exports = {
 				});
 				if (fields.length > 25) fields.splice(25);
 				const embed = new EmbedBuilder()
-					.setTitle(`Action Items for <@${assignee}>`)
+					.setTitle(`Action Items for ${(await interaction.guild?.members.fetch(assignee))?.displayName || assignee}`)
 					.setColor(HexCodes.Blue)
 					.setTimestamp()
 					.setFooter({ text: "Audit may not be able to show all action items" })
