@@ -74,7 +74,6 @@ module.exports = {
 					return {
 						name: `[${item.status}] ${item.deadline}`,
 						value: item.description,
-						inline: true,
 					};
 				});
 				if (fields.length > 25) fields.splice(25);
@@ -111,7 +110,6 @@ module.exports = {
 					return {
 						name: item.deadline,
 						value: item.assignees.map(id => `<@${id}>`).join(', ') + '\n\n' + item.description,
-						inline: true,
 					};
 				});
 				if (fields.length > 25) fields.splice(25);
