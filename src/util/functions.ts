@@ -23,6 +23,14 @@ export function convertHexColorToStatus(hex: number | null) {
 	return 'N/A';
 }
 
+export function convertHexColorToStatusEmoji(hex: number | null) {
+	if (hex === Colors.Blue) return '🔵';
+	if (hex === Colors.Yellow) return '🟡';
+	if (hex === Colors.Red) return '🔴';
+	if (hex === Colors.Green) return '🟢';
+	return '⚪';
+}
+
 export function generateModal(isEditing: boolean, defaults: Array<string | undefined | null> = []) {
 	const descriptionInput = new TextInputBuilder()
 		.setCustomId('descriptionInput')

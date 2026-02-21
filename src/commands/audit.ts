@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
-import { HexCodes, ActionItem, convertHexColorToStatus } from '../util';
+import { HexCodes, ActionItem, convertHexColorToStatus, convertHexColorToStatusEmoji } from '../util';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -60,9 +60,9 @@ module.exports = {
 				for (const assignee of assignees) {
 					const value = data.get(assignee) || [];
 					value.push({
-						description: (embed.description || 'No description for this action item.') + '\n\n' + message.url,
+						description: '```\n' + (embed.description || 'No description for this action item.') + '\n```\n\nLink: ' + message.url,
 						deadline: embed.fields[0].value,
-						status: convertHexColorToStatus(embed.color),
+						status: convertHexColorToStatusEmoji(embed.color),
 					});
 					data.set(assignee, value);
 				}
@@ -70,18 +70,19 @@ module.exports = {
 
 			const embeds: EmbedBuilder[] = [];
 			for (const [assignee, value] of data) {
+				const member = await interaction.guild?.members.fetch(assignee);
 				const fields = value.map(item => {
 					return {
-						name: `[${item.status}] ${item.deadline}`,
+						name: `${item.status} ${item.deadline}`,
 						value: item.description,
 					};
 				});
 				if (fields.length > 25) fields.splice(25);
 				const embed = new EmbedBuilder()
-					.setTitle(`Action Items for ${(await interaction.guild?.members.fetch(assignee))?.displayName || assignee}`)
+					.setAuthor({ name: member?.displayName || assignee, iconURL: member?.displayAvatarURL() })
 					.setColor(HexCodes.Blue)
 					.setTimestamp()
-					.setFooter({ text: "Audit may not be able to show all action items" })
+					.setFooter({ text: "`/audit` may not be able to show all action items" })
 					.addFields(...fields);
 
 				embeds.push(embed);
@@ -95,13 +96,14 @@ module.exports = {
 			for (const message of messages.values()) {
 				const embed = message.embeds[0];
 				const status = convertHexColorToStatus(embed.color);
+				const emoji = convertHexColorToStatusEmoji(embed.color);
 				const value = data.get(status) || [];
 				value.push({
-					description: (embed.description || 'No description for this action item.') + '\n\n' + message.url,
+					description: (embed.description || 'No description for this action item.') + '\n\nLink: ' + message.url,
 					deadline: embed.fields[0].value,
 					assignees: embed.fields[1].value.split(', ').map(id => id.slice(2, -1)),
 				});
-				data.set(status, value);
+				data.set(`${emoji} ${status}`, value);
 			}
 
 			const embeds: EmbedBuilder[] = [];
@@ -109,15 +111,15 @@ module.exports = {
 				const fields = value.map(item => {
 					return {
 						name: item.deadline,
-						value: item.assignees.map(id => `<@${id}>`).join(', ') + '\n\n' + item.description,
+						value: item.assignees.map(id => `<@${id}>`).join(', ') + '\n\n```\n' + item.description + '\n```',
 					};
 				});
 				if (fields.length > 25) fields.splice(25);
 				const embed = new EmbedBuilder()
-					.setTitle(`${status} Action Items`)
+					.setTitle(`${status}`)
 					.setColor(HexCodes.Blue)
 					.setTimestamp()
-					.setFooter({ text: "Audit may not be able to show all action items" })
+					.setFooter({ text: "`/audit` may not be able to show all action items" })
 					.addFields(...fields);
 
 				embeds.push(embed);
