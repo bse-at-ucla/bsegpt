@@ -9,13 +9,14 @@ module.exports = {
 	async execute(interaction: ButtonInteraction) {
 		if (!await authenticate(interaction, true)) return await interaction.reply({ content: 'Only an admin can purge messages.', ephemeral: true });
 
-		const limit = Number(interaction.customId.split('|')[1]);
+		let limit = Number(interaction.customId.split('|')[1]);
 		if (isNaN(limit)) return await interaction.reply({ content: "Unable to purge more messages.", ephemeral: true });
+		limit++;
 
 		const messages = await interaction.channel?.messages.fetch({ limit });
 		if (!messages) return await interaction.reply({ content: 'Unable to fetch & delete messages.', ephemeral: true });
 
-		messages.values().forEach((message) => message.delete());
+		messages.values().forEach((message, i) => i > 0 && message.delete());
 
 		const embed = interaction.message.embeds[0];
 		const newEmbed = new EmbedBuilder()
