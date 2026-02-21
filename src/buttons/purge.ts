@@ -21,7 +21,7 @@ module.exports = {
 		const embed = interaction.message.embeds[0];
 		const newEmbed = new EmbedBuilder()
 			.setColor(HexCodes.Red)
-			.setTitle(`Purged ${(Number(embed.title?.split(' ')[1]) || 0) + limit} Messages`)
+			.setTitle(`Purged ${(Number(embed.title?.split(' ')[1]) || 0) + limit - 1} Messages`)
 			.setTimestamp()
 			.setFooter({ text: `Requested by ${(await interaction.guild?.members.fetch(interaction.user.id))?.displayName || interaction.user.displayName}`, iconURL: interaction.user.displayAvatarURL() });
 
