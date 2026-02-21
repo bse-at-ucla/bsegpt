@@ -1,6 +1,8 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
 import { HexCodes, ActionItem, convertHexColorToStatus, convertHexColorToStatusEmoji } from '../util';
 
+const COLORS = [HexCodes.Blue, HexCodes.Blurple, HexCodes.DarkBlue];
+
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('audit')
@@ -73,14 +75,14 @@ module.exports = {
 				const member = await interaction.guild?.members.fetch(assignee);
 				const fields = value.map(item => {
 					return {
-						name: `[${item.status}] Deadline: ${item.deadline}`,
+						name: `${item.status} Deadline: ${item.deadline}`,
 						value: item.description,
 					};
 				});
 				if (fields.length > 25) fields.splice(25);
 				const embed = new EmbedBuilder()
-					.setAuthor({ name: member?.displayName || assignee, iconURL: member?.displayAvatarURL() })
-					.setColor(HexCodes.Blue)
+					.setAuthor({ name: 'Action Items for ' + member?.displayName || assignee, iconURL: member?.displayAvatarURL() })
+					.setColor(COLORS[embeds.length % COLORS.length])
 					.setTimestamp()
 					.setFooter({ text: "`Audit may not be able to show all action items" })
 					.addFields(...fields);
@@ -97,13 +99,14 @@ module.exports = {
 				const embed = message.embeds[0];
 				const status = convertHexColorToStatus(embed.color);
 				const emoji = convertHexColorToStatusEmoji(embed.color);
-				const value = data.get(status) || [];
+				const key = `${emoji} ${status}`;
+				const value = data.get(key) || [];
 				value.push({
 					description: '\n```\n' + (embed.description || 'No description for this action item.') + '\n```\nLink: ' + message.url + '\n',
 					deadline: embed.fields[0].value,
 					assignees: embed.fields[1].value.split(', ').map(id => id.slice(2, -1)),
 				});
-				data.set(`${emoji} ${status}`, value);
+				data.set(key, value);
 			}
 
 			const embeds: EmbedBuilder[] = [];
@@ -111,13 +114,13 @@ module.exports = {
 				const fields = value.map(item => {
 					return {
 						name: `Deadline: ${item.deadline}`,
-						value: 'Assignee(s): ' + item.assignees.map(id => `<@${id}>`).join(', ') + '\n\n' + item.description,
+						value: 'Assignee(s): ' + item.assignees.map(id => `<@${id}>`).join(', ') + item.description,
 					};
 				});
 				if (fields.length > 25) fields.splice(25);
 				const embed = new EmbedBuilder()
 					.setTitle(`${status}`)
-					.setColor(HexCodes.Blue)
+					.setColor(COLORS[embeds.length % COLORS.length])
 					.setTimestamp()
 					.setFooter({ text: "Audit may not be able to show all action items" })
 					.addFields(...fields);
