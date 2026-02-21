@@ -61,7 +61,7 @@ export function generateModal(isEditing: boolean, defaults: Array<string | undef
 }
 
 export async function authenticate(interaction: ButtonInteraction | Interaction, adminOnly: boolean = false) {
-	const isAssignee = interaction instanceof ButtonInteraction && interaction.message.embeds[0].fields[1].value.split(', ').includes(`<@${interaction.user.id}>`);
+	const isAssignee = (interaction instanceof ButtonInteraction && interaction.message.embeds[0].fields.length > 1) && interaction.message.embeds[0].fields[1].value.split(', ').includes(`<@${interaction.user.id}>`);
 	const isAdmin = (await interaction.guild?.roles.fetch())?.get('1473577049322164294')?.members.has(interaction.user.id);
 	return adminOnly ? isAdmin : (isAdmin || isAssignee);
 }
