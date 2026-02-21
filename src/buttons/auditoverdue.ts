@@ -37,7 +37,7 @@ module.exports = {
 		if (missed.length > 0) {
 			await interaction.followUp({ content: `Could not send overdue reminders for the following messages:\n- ${missed.join('\n- ')}`, ephemeral: true });
 		} else {
-			await interaction.followUp({ content: 'Sended overdue reminders.', ephemeral: true });
+			await interaction.followUp({ content: 'Sent overdue reminders.', ephemeral: true });
 		}
 	},
 };
