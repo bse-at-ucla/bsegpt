@@ -60,7 +60,7 @@ module.exports = {
 				for (const assignee of assignees) {
 					const value = data.get(assignee) || [];
 					value.push({
-						description: '```\n' + (embed.description || 'No description for this action item.') + '\n```\n\nLink: ' + message.url,
+						description: '\n```\n' + (embed.description || 'No description for this action item.') + '\n```\nLink: ' + message.url + '\n',
 						deadline: embed.fields[0].value,
 						status: convertHexColorToStatusEmoji(embed.color),
 					});
@@ -73,7 +73,7 @@ module.exports = {
 				const member = await interaction.guild?.members.fetch(assignee);
 				const fields = value.map(item => {
 					return {
-						name: `${item.status} ${item.deadline}`,
+						name: `[${item.status}] Deadline: ${item.deadline}`,
 						value: item.description,
 					};
 				});
@@ -82,7 +82,7 @@ module.exports = {
 					.setAuthor({ name: member?.displayName || assignee, iconURL: member?.displayAvatarURL() })
 					.setColor(HexCodes.Blue)
 					.setTimestamp()
-					.setFooter({ text: "`/audit` may not be able to show all action items" })
+					.setFooter({ text: "`Audit may not be able to show all action items" })
 					.addFields(...fields);
 
 				embeds.push(embed);
@@ -99,7 +99,7 @@ module.exports = {
 				const emoji = convertHexColorToStatusEmoji(embed.color);
 				const value = data.get(status) || [];
 				value.push({
-					description: (embed.description || 'No description for this action item.') + '\n\nLink: ' + message.url,
+					description: '\n```\n' + (embed.description || 'No description for this action item.') + '\n```\nLink: ' + message.url + '\n',
 					deadline: embed.fields[0].value,
 					assignees: embed.fields[1].value.split(', ').map(id => id.slice(2, -1)),
 				});
@@ -110,8 +110,8 @@ module.exports = {
 			for (const [status, value] of data) {
 				const fields = value.map(item => {
 					return {
-						name: item.deadline,
-						value: item.assignees.map(id => `<@${id}>`).join(', ') + '\n\n```\n' + item.description + '\n```',
+						name: `Deadline: ${item.deadline}`,
+						value: 'Assignee(s): ' + item.assignees.map(id => `<@${id}>`).join(', ') + '\n\n' + item.description,
 					};
 				});
 				if (fields.length > 25) fields.splice(25);
@@ -119,7 +119,7 @@ module.exports = {
 					.setTitle(`${status}`)
 					.setColor(HexCodes.Blue)
 					.setTimestamp()
-					.setFooter({ text: "`/audit` may not be able to show all action items" })
+					.setFooter({ text: "Audit may not be able to show all action items" })
 					.addFields(...fields);
 
 				embeds.push(embed);
