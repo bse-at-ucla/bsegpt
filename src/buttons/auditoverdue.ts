@@ -11,7 +11,8 @@ module.exports = {
 			await interaction.followUp({ content: 'Only an admin can send overdue reminders.', ephemeral: true });
 		}
 
-		const messageIds = interaction.customId.split('|').toSpliced(0, 1);
+		const buf = Buffer.from(interaction.customId.split('|')[1], 'base64url');
+		const messageIds = Array.from({ length: buf.length / 8 }, (_, i) => buf.readBigUInt64BE(i * 8).toString());
 		const missed: string[] = [];
 
 		messageIds.forEach(async (messageId) => {

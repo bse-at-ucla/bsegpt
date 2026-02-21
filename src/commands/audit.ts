@@ -5,7 +5,7 @@ const COLORS = [HexCodes.Blue, HexCodes.Blurple, HexCodes.DarkBlue];
 
 function generateOverdueButton(messageIds: string[]) {
 	return new ButtonBuilder()
-		.setCustomId(`auditoverdue|${messageIds.join('|')}`)
+		.setCustomId(`auditoverdue|${Buffer.concat(messageIds.map(id => { const buf = Buffer.alloc(8); buf.writeBigUInt64BE(BigInt(id)); return buf; })).toString('base64url')}`)
 		.setLabel('Send Overdue Reminders')
 		.setStyle(ButtonStyle.Danger)
 		.setEmoji('⛔')
@@ -13,7 +13,7 @@ function generateOverdueButton(messageIds: string[]) {
 
 function generateDoneButton(messageIds: string[]) {
 	return new ButtonBuilder()
-		.setCustomId(`auditpurge|${messageIds.join('|')}`)
+		.setCustomId(`auditpurge|${Buffer.concat(messageIds.map(id => { const buf = Buffer.alloc(8); buf.writeBigUInt64BE(BigInt(id)); return buf; })).toString('base64url') }`)
 		.setLabel('Delete Done Items')
 		.setStyle(ButtonStyle.Danger)
 		.setEmoji('🗑️');
@@ -112,7 +112,7 @@ module.exports = {
 			if (embeds.length > 10) embeds.splice(10);
 
 			const rowBuilder = new ActionRowBuilder<ButtonBuilder>()
-				.addComponents([generateOverdueButton(data.values().filter(items => items.some(i => i.status === '🔴')).map(item => item[0].link).toArray()), generateDoneButton(data.values().filter(items => items.some(i => i.status === '🟢')).map(item => item[0].link).toArray())]);
+				.addComponents([generateOverdueButton(data.values().filter(items => items.some(i => i.status === '🔴')).map(item => item[0].link.split("/").pop()!).toArray()), generateDoneButton(data.values().filter(items => items.some(i => i.status === '🟢')).map(item => item[0].link.split("/").pop()!).toArray())]);
 
 			await interaction.editReply({ embeds, components: [rowBuilder] });
 		} else if (type === 'status') {
@@ -154,7 +154,7 @@ module.exports = {
 			if (embeds.length > 10) embeds.splice(10);
 
 			const rowBuilder = new ActionRowBuilder<ButtonBuilder>()
-				.addComponents([generateOverdueButton((data.get(data.keys().find(key => key.includes('🔴')) || '') || []).map(item => item.link)), generateDoneButton((data.get(data.keys().find(key => key.includes('🟢')) || '') || []).map(item => item.link))]);
+				.addComponents([generateOverdueButton((data.get(data.keys().find(key => key.includes('🔴')) || '') || []).map(item => item.link.split("/").pop()!)), generateDoneButton((data.get(data.keys().find(key => key.includes('🟢')) || '') || []).map(item => item.link.split("/").pop()!))]);
 
 			await interaction.editReply({ embeds, components: [rowBuilder] });
 		}
