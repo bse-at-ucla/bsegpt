@@ -7,9 +7,7 @@ module.exports = {
 	},
 
 	async execute(interaction: ButtonInteraction) {
-		if (!await authenticate(interaction, true)) {
-			await interaction.reply({ content: 'Only an admin can send overdue reminders.', ephemeral: true });
-		}
+		if (!await authenticate(interaction, true)) return await interaction.reply({ content: 'Only an admin can send overdue reminders.', ephemeral: true });
 
 		const buf = Buffer.from(interaction.customId.split('|')[1], 'base64url');
 		const messageIds = Array.from({ length: buf.length / 8 }, (_, i) => buf.readBigUInt64BE(i * 8).toString());

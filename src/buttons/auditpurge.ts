@@ -7,9 +7,7 @@ module.exports = {
 	},
 
 	async execute(interaction: ButtonInteraction) {
-		if (!await authenticate(interaction, true)) {
-			await interaction.reply({ content: 'Only an admin can delete action items.', ephemeral: true });
-		}
+		if (!await authenticate(interaction, true)) return await interaction.reply({ content: 'Only an admin can delete action items.', ephemeral: true });
 
 		// const messageIds = interaction.customId.split('|').toSpliced(0, 1);
 		const buf = Buffer.from(interaction.customId.split('|')[1], 'base64url');
