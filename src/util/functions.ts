@@ -1,4 +1,4 @@
-import { TextInputBuilder, TextInputStyle, LabelBuilder, ModalBuilder, ButtonInteraction, Colors } from 'discord.js';
+import { TextInputBuilder, TextInputStyle, LabelBuilder, ModalBuilder, ButtonInteraction, Colors, Interaction } from 'discord.js';
 import type { ValueOf } from './types'
 import { HexCodes } from './enum';
 
@@ -60,8 +60,8 @@ export function generateModal(isEditing: boolean, defaults: Array<string | undef
 		.addLabelComponents(descriptionLabel, deadlineLabel);
 }
 
-export async function authenticate(interaction: ButtonInteraction, adminOnly: boolean = false) {
-	const isAssignee = interaction.message.embeds[0].fields[1].value.split(', ').includes(`<@${interaction.user.id}>`);
+export async function authenticate(interaction: ButtonInteraction | Interaction, adminOnly: boolean = false) {
+	const isAssignee = interaction instanceof ButtonInteraction && interaction.message.embeds[0].fields[1].value.split(', ').includes(`<@${interaction.user.id}>`);
 	const isAdmin = (await interaction.guild?.roles.fetch())?.get('1473577049322164294')?.members.has(interaction.user.id);
 	return adminOnly ? isAdmin : (isAdmin || isAssignee);
 }

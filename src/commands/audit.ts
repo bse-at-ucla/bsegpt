@@ -1,7 +1,23 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
-import { HexCodes, ActionItem, convertHexColorToStatus, convertHexColorToStatusEmoji } from '../util';
+import { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } from 'discord.js';
+import { HexCodes, ActionItem, convertHexColorToStatus, convertHexColorToStatusEmoji, authenticate } from '../util';
 
 const COLORS = [HexCodes.Blue, HexCodes.Blurple, HexCodes.DarkBlue];
+
+function generateOverdueButton(messageIds: string[]) {
+	return new ButtonBuilder()
+		.setCustomId(`auditoverdue|${messageIds.join('|')}`)
+		.setLabel('Send Overdue Reminders')
+		.setStyle(ButtonStyle.Danger)
+		.setEmoji('⛔')
+}
+
+function generateDoneButton(messageIds: string[]) {
+	return new ButtonBuilder()
+		.setCustomId(`auditpurge|${messageIds.join('|')}`)
+		.setLabel('Delete Done Items')
+		.setStyle(ButtonStyle.Danger)
+		.setEmoji('🗑️');
+}
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -19,10 +35,10 @@ module.exports = {
 		.addIntegerOption(option =>
 			option
 				.setName('limit')
-				.setDescription('The number of action items to audit (default 50)')
+				.setDescription('The number of messages to check for action items (default 50)')
 				.setRequired(false)
 				.setMinValue(1)
-				.setMaxValue(1000)
+				.setMaxValue(500)
 				.addChoices(
 					{ name: "1", value: 1 },
 					{ name: "5", value: 5 },
@@ -33,7 +49,7 @@ module.exports = {
 					{ name: "100", value: 100 },
 					{ name: "250", value: 250 },
 					{ name: "500", value: 500 },
-					{ name: "1000", value: 1000 },
+					// { name: "1000", value: 1000 },
 			))
 		.addBooleanOption(option =>
 			option
@@ -44,6 +60,8 @@ module.exports = {
 		const ephemeral = interaction.options.get('ephemeral')?.value as boolean || false;
 		const type = interaction.options.get('type')?.value as 'member' | 'status';
 		const limit = interaction.options.get('limit')?.value as number || 50;
+
+		if (!await authenticate(interaction, true)) return await interaction.reply({ content: 'Only an admin can audit action items.', ephemeral: true });
 
 		const channel = await interaction.channel?.fetch();
 		let messages = await channel?.messages.fetch({ limit: limit });
@@ -62,9 +80,10 @@ module.exports = {
 				for (const assignee of assignees) {
 					const value = data.get(assignee) || [];
 					value.push({
-						description: '\n```\n' + (embed.description || 'No description for this action item.') + '\n```\nLink: ' + message.url + '\n',
+						description: '\n```\n' + (embed.description || 'No description for this action item.') + '\n```',
 						deadline: embed.fields[0].value,
 						status: convertHexColorToStatusEmoji(embed.color),
+						link: message.url,
 					});
 					data.set(assignee, value);
 				}
@@ -76,7 +95,7 @@ module.exports = {
 				const fields = value.map(item => {
 					return {
 						name: `${item.status} Deadline: ${item.deadline}`,
-						value: item.description,
+						value: item.description + '\nLink: ' + item.link + '\n',
 					};
 				});
 				if (fields.length > 25) fields.splice(25);
@@ -92,7 +111,10 @@ module.exports = {
 
 			if (embeds.length > 10) embeds.splice(10);
 
-			await interaction.editReply({ embeds });
+			const rowBuilder = new ActionRowBuilder<ButtonBuilder>()
+				.addComponents([generateOverdueButton(data.values().filter(items => items.some(i => i.status === '🔴')).map(item => item[0].link).toArray()), generateDoneButton(data.values().filter(items => items.some(i => i.status === '🟢')).map(item => item[0].link).toArray())]);
+
+			await interaction.editReply({ embeds, components: [rowBuilder] });
 		} else if (type === 'status') {
 			const data = new Map<string, Omit<ActionItem, 'status'>[]>();
 			for (const message of messages.values()) {
@@ -102,9 +124,10 @@ module.exports = {
 				const key = `${emoji} ${status}`;
 				const value = data.get(key) || [];
 				value.push({
-					description: '\n```\n' + (embed.description || 'No description for this action item.') + '\n```\nLink: ' + message.url + '\n',
+					description: '\n```\n' + (embed.description || 'No description for this action item.') + '\n```',
 					deadline: embed.fields[0].value,
 					assignees: embed.fields[1].value.split(', ').map(id => id.slice(2, -1)),
+					link: message.url,
 				});
 				data.set(key, value);
 			}
@@ -114,7 +137,7 @@ module.exports = {
 				const fields = value.map(item => {
 					return {
 						name: `Deadline: ${item.deadline}`,
-						value: 'Assignee(s): ' + item.assignees.map(id => `<@${id}>`).join(', ') + item.description,
+						value: 'Assignee(s): ' + item.assignees.map(id => `<@${id}>`).join(', ') + item.description + '\nLink: ' + item.link + '\n',
 					};
 				});
 				if (fields.length > 25) fields.splice(25);
@@ -130,7 +153,10 @@ module.exports = {
 
 			if (embeds.length > 10) embeds.splice(10);
 
-			await interaction.editReply({ embeds });
+			const rowBuilder = new ActionRowBuilder<ButtonBuilder>()
+				.addComponents([generateOverdueButton((data.get(data.keys().find(key => key.includes('🔴')) || '') || []).map(item => item.link)), generateDoneButton((data.get(data.keys().find(key => key.includes('🟢')) || '') || []).map(item => item.link))]);
+
+			await interaction.editReply({ embeds, components: [rowBuilder] });
 		}
 	},
 };
