@@ -112,7 +112,7 @@ module.exports = {
 			if (embeds.length > 10) embeds.splice(10);
 
 			const rowBuilder = new ActionRowBuilder<ButtonBuilder>()
-				.addComponents([generateOverdueButton(data.values().map(items => items.filter(i => i.status === '🔴')).filter(l => l.length > 0).map(item => item[0].link.split("/").pop()!).filter(v => v.length > 0).toArray()), generateDoneButton(data.values().filter(items => items.some(i => i.status === '🟢')).map(item => item[0].link.split("/").pop()!).toArray())]);
+				.addComponents([generateOverdueButton(data.values().map(items => items.filter(i => i.status === '🔴')).filter(l => l.length > 0).map(item => item[0].link.split("/").pop()!).filter(v => v.length > 0).toArray()), generateDoneButton(data.values().map(items => items.filter(i => i.status === '🟢')).filter(l => l.length > 0).map(item => item[0].link.split("/").pop()!).filter(v => v.length > 0).toArray())]);
 
 			await interaction.editReply({ embeds, components: [rowBuilder] });
 		} else if (type === 'status') {
