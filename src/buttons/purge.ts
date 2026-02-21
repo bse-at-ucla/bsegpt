@@ -22,7 +22,7 @@ module.exports = {
 			.setColor(HexCodes.Red)
 			.setTitle(`Purged ${(Number(embed.title?.split(' ')[1]) || 0) + limit} Messages`)
 			.setTimestamp()
-			.setFooter({ text: `Requested by ${(await interaction.guild?.members.fetch(interaction.user.id)) || interaction.user.displayName}`, iconURL: interaction.user.displayAvatarURL() });
+			.setFooter({ text: `Requested by ${(await interaction.guild?.members.fetch(interaction.user.id))?.displayName || interaction.user.displayName}`, iconURL: interaction.user.displayAvatarURL() });
 
 		await interaction.update({
 			embeds: [newEmbed],
