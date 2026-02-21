@@ -95,7 +95,7 @@ module.exports = {
 				const fields = value.map(item => {
 					return {
 						name: `${item.status} Deadline: ${item.deadline}`,
-						value: item.description + '\nLink: ' + item.link + '\n',
+						value: item.description + 'Link: ' + item.link + '\n\n',
 					};
 				});
 				if (fields.length > 25) fields.splice(25);
@@ -137,7 +137,7 @@ module.exports = {
 				const fields = value.map(item => {
 					return {
 						name: `Deadline: ${item.deadline}`,
-						value: 'Assignee(s): ' + item.assignees.map(id => `<@${id}>`).join(', ') + item.description + '\nLink: ' + item.link + '\n',
+						value: 'Assignee(s): ' + item.assignees.map(id => `<@${id}>`).join(', ') + item.description + 'Link: ' + item.link + '\n\n',
 					};
 				});
 				if (fields.length > 25) fields.splice(25);

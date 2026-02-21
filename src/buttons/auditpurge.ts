@@ -8,7 +8,7 @@ module.exports = {
 
 	async execute(interaction: ButtonInteraction) {
 		if (!await authenticate(interaction, true)) {
-			await interaction.followUp({ content: 'Only an admin can delete action items.', ephemeral: true });
+			await interaction.reply({ content: 'Only an admin can delete action items.', ephemeral: true });
 		}
 
 		// const messageIds = interaction.customId.split('|').toSpliced(0, 1);
@@ -19,6 +19,6 @@ module.exports = {
 			interaction.channel?.messages.fetch(messageId).then(message => message?.delete());
 		});
 
-		await interaction.followUp({ content: 'Deleted action items.', ephemeral: true });
+		await interaction.reply({ content: 'Deleted action items.', ephemeral: true });
 	},
 };

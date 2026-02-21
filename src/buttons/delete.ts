@@ -8,7 +8,7 @@ module.exports = {
 
 	async execute(interaction: ButtonInteraction) {
 		if (!await authenticate(interaction, true)) {
-			await interaction.followUp({ content: 'Only an admin can delete an action item.', ephemeral: true });
+			await interaction.reply({ content: 'Only an admin can delete an action item.', ephemeral: true });
 		}
 
 		await interaction.message.delete();

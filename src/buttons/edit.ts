@@ -8,11 +8,11 @@ module.exports = {
 
 	async execute(interaction: ButtonInteraction) {
 		if (!interaction.message.embeds[0]) {
-			await interaction.followUp({ content: 'Unable to update status. Please try again later.', ephemeral: true });
+			await interaction.reply({ content: 'Unable to update status. Please try again later.', ephemeral: true });
 		};
 
 		if (!await authenticate(interaction)) {
-			await interaction.followUp({ content: 'Only an assignee or admin can edit this action item.', ephemeral: true });
+			await interaction.reply({ content: 'Only an assignee or admin can edit this action item.', ephemeral: true });
 		}
 
 		const embed = interaction.message.embeds[0];

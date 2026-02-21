@@ -8,7 +8,7 @@ module.exports = {
 
 	async execute(interaction: ButtonInteraction) {
 		if (!await authenticate(interaction, true)) {
-			await interaction.followUp({ content: 'Only an admin can send overdue reminders.', ephemeral: true });
+			await interaction.reply({ content: 'Only an admin can send overdue reminders.', ephemeral: true });
 		}
 
 		const buf = Buffer.from(interaction.customId.split('|')[1], 'base64url');
@@ -35,9 +35,9 @@ module.exports = {
 		});
 
 		if (missed.length > 0) {
-			await interaction.followUp({ content: `Could not send overdue reminders for the following messages:\n- ${missed.join('\n- ')}`, ephemeral: true });
+			await interaction.reply({ content: `Could not send overdue reminders for the following messages:\n- ${missed.join('\n- ')}`, ephemeral: true });
 		} else {
-			await interaction.followUp({ content: 'Sent overdue reminders.', ephemeral: true });
+			await interaction.reply({ content: 'Sent overdue reminders.', ephemeral: true });
 		}
 	},
 };
